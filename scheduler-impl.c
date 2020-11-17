@@ -48,6 +48,7 @@ void scheduler(Process* proc, LinkedQueue** ProcessQueue, int proc_num, int queu
        if(tmp%period==0){
            pin = 0;//No process is pined then
 
+
        }
 */
        //decide the first approchable non_empty queue
@@ -90,10 +91,19 @@ void scheduler(Process* proc, LinkedQueue** ProcessQueue, int proc_num, int queu
 	   printf("alloement time used up, is current queue empty:%d\n",IsEmpty(current_queue));
 	   if(!IsEmptyQueue(current_queue)){
            de_proc = DeQueue(current_queue);
+	   //If the process is on the last queue
+           if(queue_index==0){
+               de_proc.turnaround_time = ProcessQueue[0]->allotment_time;
+               de_proc.completion_time = ProcessQueue[0]->time_slice;
+               EnQueue(ProcessQueue[0],de_proc);
+
+	   }
+           else{
 	   de_proc.turnaround_time = ProcessQueue[queue_index-1]->allotment_time;
 	   de_proc.completion_time = ProcessQueue[queue_index-1]->time_slice;
 
 	   EnQueue(ProcessQueue[queue_index-1],de_proc);
+	   }
 	   printf("THe second output\n");
            printf("Assign second start time:%d\n",start_time);
            outprint(start_time,tmp_time,de_proc.process_id,de_proc.arrival_time,de_proc.execution_time);
@@ -120,7 +130,7 @@ void scheduler(Process* proc, LinkedQueue** ProcessQueue, int proc_num, int queu
 
        }
    }
-	if(tmp_time == 400){
+	if(tmp_time == 1000){
             break;
 	}
 	tmp_time+=1;
